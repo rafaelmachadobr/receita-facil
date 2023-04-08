@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function Detail() {
+export function Detail() {
   return (
     <View style={styles.container}>
       <Text>Página Detalhes da receita!!!</Text>
