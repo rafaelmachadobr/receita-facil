@@ -15,25 +15,48 @@ import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
 import { Ingredients } from "../../components/ingredients";
 import { Instructions } from "../../components/instructions";
 import { VideoView } from "../../components/video";
+import { isFavorite, removeItem, saveFavorite } from "../../utils/storage";
 
 export function Detail() {
   const route = useRoute();
   const navigation = useNavigation();
 
   const [showVideo, setShowVideo] = useState(false);
+  const [favorite, setFavorite] = useState(false);
 
   useLayoutEffect(() => {
+    async function getStatusFavorite() {
+      const receipeFavorite = await isFavorite(route.params?.data);
+      setFavorite(receipeFavorite);
+    }
+
+    getStatusFavorite();
+
     navigation.setOptions({
       title: route.params?.data
         ? route.params.data.name
         : "Detalhes da receita",
       headerRight: () => (
-        <Pressable onPress={() => console.log("Favoritou")}>
-          <Entypo name="heart" size={28} color="#ff4141" />
+        <Pressable onPress={() => handleFavoriteReceipe(route.params?.data)}>
+          {favorite ? (
+            <Entypo name="heart" size={28} color="#ff4141" />
+          ) : (
+            <Entypo name="heart-outlined" size={28} color="#ff4141" />
+          )}
         </Pressable>
       ),
     });
-  }, [navigation, route.params?.data]);
+  }, [navigation, route.params?.data, favorite]);
+
+  async function handleFavoriteReceipe(receipe) {
+    if (favorite) {
+      await removeItem(receipe.id);
+      setFavorite(false);
+    } else {
+      await saveFavorite("@appreceitas", receipe);
+      setFavorite(true);
+    }
+  }
 
   function handleOpenVideo() {
     setShowVideo(true);
