@@ -11,12 +11,9 @@ export async function saveFavorite(key, newItem) {
 
   const hasItem = myFavorites.some((item) => item.id === newItem.id);
 
-  if (hasItem) {
-    console.log("ESSE ITEM JÁ EXISTE NA LISTA DE FAVORITOS");
-    return;
+  if (!hasItem) {
+    myFavorites.push(newItem);
   }
-
-  myFavorites.push(newItem);
 
   await AsyncStorage.setItem(key, JSON.stringify(myFavorites));
 }
@@ -40,5 +37,5 @@ export async function isFavorite(receipe) {
     return true;
   }
 
-  return false; 
+  return false;
 }

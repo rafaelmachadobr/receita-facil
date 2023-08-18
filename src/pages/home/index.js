@@ -14,10 +14,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { Logo } from "../../components/logo";
 import api from "../../services/api";
 import { FoodList } from "../../components/foodlist";
+import { useNavigation } from "@react-navigation/native";
 
 export function Home() {
   const [inputValue, setInputValue] = useState("");
   const [foods, setFoods] = useState([]);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     async function fetchApi() {
@@ -29,7 +32,11 @@ export function Home() {
   }, []);
 
   function handleSearch() {
-    console.log("Você digitou:", inputValue);
+    if (!inputValue) return;
+
+    let input = inputValue;
+    setInputValue("");
+    navigation.navigate("Search", { name: input });
   }
 
   return (
