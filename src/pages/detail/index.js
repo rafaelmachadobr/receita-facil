@@ -8,6 +8,7 @@ import {
   Image,
   View,
   Modal,
+  Share,
 } from "react-native";
 
 import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
@@ -38,6 +39,17 @@ export function Detail() {
     setShowVideo(true);
   }
 
+  async function shareReceipe() {
+    try {
+      await Share.share({
+        url: route.params?.data.video,
+        message: `Veja como fazer a receita ${route.params?.data.name} em: ${route.params?.data.video}`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 14 }}
@@ -60,7 +72,7 @@ export function Detail() {
             Ingredientes ({route.params?.data.total_ingredients})
           </Text>
         </View>
-        <Pressable>
+        <Pressable onPress={shareReceipe}>
           <Feather name="share-2" size={24} color="#121212" />
         </Pressable>
       </View>
